@@ -102,5 +102,10 @@ var STYLE = {
       "font-weight": "400",
       "margin-top": "0px"
     }
+  },
+  "class": {
+    "red": {
+      "color": "red"
+    }
   }
 };

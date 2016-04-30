@@ -76,8 +76,10 @@ Sheet.prototype = {
   },
   text: function (text, x, y, style) {
     var $this = this;
+
     this.context.textBaseline = "bottom";
     this.context.font = style["font-weight"] + " " + style["font-size"] + " " + style["font-family"];
+    this.context.fillStyle = style.color || "#000";
 
     var max_width = parseFloat(style["max-width"]) || this.canvas.width - x;
     var line_width = this.context.measureText(text).width;

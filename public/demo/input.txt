@@ -1,6 +1,6 @@
 container{0,0}
-  div.red
-    h1~The Black Scholes Model
+  div
+    h1.red~The Black Scholes Model
 
     h3~A study into the complexities of the Black-Scholes model for pricing derivatives.
 
