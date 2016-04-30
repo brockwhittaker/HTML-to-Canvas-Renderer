@@ -47,6 +47,7 @@ var MANIFEST = {
 
 var STYLE = {
   "tags": {
+    "document": {},
     "body": {
       "font-family": "Roboto",
       "font-size": "12px",

@@ -72,9 +72,17 @@ var Parser = function () {
       var pointer = tree,
           height = 0,
           left = 0,
-          $this = this;
+          $this = this,
+          container_index = 0;
 
+      /* the three tree traversal motions:
+        - deeperLevel: Go a level deeper into the tree.
+        - nextSibling: Move horizontally through the tree to a sibling node.
+        - shallowerLevel: Move up a level towards the base.
+      */
       var actions = {
+        /* If the pointer has been seen, don't revisit the node, else return
+           the first child node and add to the left margin. */
         deeperLevel: function (pointer) {
           if (pointer.seen) return false;
           else {
@@ -86,10 +94,14 @@ var Parser = function () {
           }
         },
 
+        /* move to the next sibling unless it's the last sibling, in which case
+           return false. */
         nextSibling: function (pointer) {
           return (pointer.next) ? pointer.next : false;
         },
 
+        /* move up a level. If you can't move up any more, you are at the end of
+           the tree. */
         shallowerLevel: function (pointer) {
           if (pointer && pointer.parent) {
             left -= $this.getMargin(pointer.parent.type, "left").value;
@@ -99,19 +111,41 @@ var Parser = function () {
         }
       };
 
+      /* the pointer should exist as long as it can traverse through the tree. */
       while (pointer) {
+        /* first try to go deeper (heh), then if you can't go to the next sibling (heh),
+           and then if there's no deeper node and no sibling pull out. */
         pointer = actions.deeperLevel(pointer) || actions.nextSibling(pointer) || actions.shallowerLevel(pointer);
 
-        if (!pointer.seen && pointer) {
+        /* if the pointer isn't visited yet but also exists..
+              - this is important because some nodes get revisited because they
+                have to be.
+        */
+        if (pointer && !pointer.seen) {
+          /* if it is traversing over a root element, recenter the height and
+             left offset. */
+          if (pointer.parent.type == "document") {
+            height = tree.containers[container_index][1];
+            left = tree.containers[container_index][0];
+            container_index++;
+          }
+
           height += this.getMargin(pointer.type, "top").value;
+
+          /* only add the height of valid lines. If there's no text, don't add
+             any height. */
           if (pointer.text.length > 0) {
             height += this.getHeight(pointer.type).value * this.getAttr(pointer.type, "line-height", 1);
           }
+
+          /* provide a callback with all the info needed to draw the line. */
           height += callback(coords, pointer, height, left) || 0;
         }
       }
     },
 
+    /* get the current level you're on by checking the number of spaces before
+       the line starts. */
     getLevel: function (line) {
       var x = 0;
       while (line[x] && line.charCodeAt(x) == 32) {
@@ -121,10 +155,14 @@ var Parser = function () {
       return x;
     },
 
+    /* when parsing the line, remove the leading whitespace first. */
     replaceSpacing: function (line) {
       return line.replace(/^(\s)+/g, "");
     },
 
+    /* parse a line like:
+         - "h2.red~Some html" => {tag: "h2", class: "red", text: "Some html"}
+    */
     parseLine: function (line) {
       line = line.split(/\~/g);
       var _meta = line[0],
@@ -142,10 +180,12 @@ var Parser = function () {
       };
     },
 
+    /* utility function to get last array element. */
     last: function (arr) {
       return arr[arr.length - 1];
     },
 
+    /* figure how many levels ahead or behind the nested object is from the last. */
     lineDifferential: function (meta, newLevel, spaces) {
       var diff = (newLevel - meta.level) / spaces;
       meta.level = newLevel;
@@ -153,6 +193,7 @@ var Parser = function () {
       return diff;
     },
 
+    /* the general parse function for line-by-line parsing. */
     parse: function (input) {
       var $this = this;
 
@@ -166,46 +207,95 @@ var Parser = function () {
           },
           diff;
 
+      /* split input into lines by \n. */
       input = input.split(/\n/g);
       input.forEach(function (line) {
+        /* if the line contains no real characters other than " ", skip. */
         if ($this.replaceSpacing(line).length > 0) {
+          /* get the difference in level. */
           diff = $this.lineDifferential(meta, $this.getLevel(line), 2);
-          $this.addToStructure(line, meta, diff);
+          /* add the line to the tree structure. */
+          $this.addToStructure(line, meta, diff, DOCUMENT);
         }
       });
 
       return DOCUMENT;
     },
 
-    addToStructure: function (line, meta, diff) {
+    /* check if a line is a new container block with new coordinate pos. */
+    checkIfContainer: function (line) {
+      /* check if a line starts a new container block. */
+      if (/^container\{\d+,\d+\}/.test(line)) {
+        /* this is a fucking mess. */
+        return line
+          .match(/\{\d+,\d+\}/g)[0]
+          .replace(/{|}/g, "")
+          .split(/,/g)
+          .map(function (o) {
+            return parseFloat(o);
+          });
+      } else return false;
+    },
+
+    /* add a single line to the tree structure. */
+    addToStructure: function (line, meta, diff, DOCUMENT) {
       var node;
 
+      /* remove the tabs -- not necessary anymore. */
       line = this.replaceSpacing(line);
-      var parsed = this.parseLine(line);
 
-      if (diff > 0) {
-        node = {
-          type: parsed.tag,
-          class: parsed.class,
-          text: parsed.text,
-          children: []
-        };
-        this.last(meta.levels).children.push(node);
-        meta.levels.push(node);
-      } else {
-        // pop a layer if the same, and one for each new layer
-        for (var x = 0; x <= Math.abs(diff); x++) {
-          meta.levels.pop();
+      /* check if a new container block. */
+      var isContainer = this.checkIfContainer(line);
+
+      /* if it's a container, isContainer is set to an array like [x,y]. */
+      if (isContainer) {
+        /* push the x,y specs to the tree to retrieve later. */
+        if (DOCUMENT.containers) {
+          DOCUMENT.containers.push(isContainer);
+        } else {
+          DOCUMENT.containers = [isContainer];
         }
+        /* reset back to the base level. */
+        meta.levels = [DOCUMENT];
+      } else {
+        /* if not a container, parse the line like normal. */
+        var parsed = this.parseLine(line);
 
-        node = {
-          type: parsed.tag,
-          class: parsed.class,
-          text: parsed.text,
-          children: []
-        };
-        this.last(meta.levels).children.push(node);
-        meta.levels.push(node);
+        /* if the node is nested.. */
+        if (diff > 0) {
+          node = {
+            type: parsed.tag,
+            class: parsed.class,
+            text: parsed.text,
+            children: []
+          };
+
+          /* make the node a child of the current "pointer". */
+          this.last(meta.levels).children.push(node);
+          meta.levels.push(node);
+        } else {
+          /* pop a layer if the same, and one for each tab difference.
+              - This means if you go like:
+                div
+                  div
+                    h2
+                div
+                It will pop out three times back to the parent of div.
+          */
+          for (var x = 0; x <= Math.abs(diff); x++) {
+            meta.levels.pop();
+          }
+
+          node = {
+            type: parsed.tag,
+            class: parsed.class,
+            text: parsed.text,
+            children: []
+          };
+
+          this.last(meta.levels).children.push(node);
+          meta.levels.push(node);
+        }
       }
     }
   };
@@ -213,10 +303,14 @@ var Parser = function () {
 
 Parser.prototype = {
   render: function (tree, coords, callback) {
+    /* add the recursion mechanism for the addParents function. */
     var recursion = this.utils.RecursionCounter((function () {
+      /* when the recursive addParents function is done, run the iterate
+         function. */
       this.utils.iterate(tree, coords, callback);
     }).bind(this));
 
+    /* link the parents and siblings in the object. */
     this.utils.addParents(tree.children, tree, recursion);
   },
   parse: function (input) {
