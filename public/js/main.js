@@ -3,7 +3,7 @@ var $ = _;
 $.get("public/demo/input.txt", function (response) {
   response = parser.parse(response);
   var body = response.children[0];
-  parser.render(body, {x: 0, y: 0}, function (coords, o, h, l, i) {
+  parser.render(body, {x: 0, y: 0}, function (coords, o, h, l) {
     var x = 10 + l + (coords.x || 0);
     var y = h + (coords.y || 0);
 
@@ -11,5 +11,4 @@ $.get("public/demo/input.txt", function (response) {
     console.log(new Date() * 1);
     return height;
   });
-
 });

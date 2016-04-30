@@ -1,5 +1,7 @@
 var Parser = function () {
   this.utils = {
+    /* tokenizeMargin accepts a value like "35px" and returns the parsed float
+       value and the units it is in. */
     tokenizeMargin: function (val) {
       if (/px/.test(val)) {
         return {
@@ -14,16 +16,24 @@ var Parser = function () {
       }
     },
 
+    /* this gets the margin attribute from the STYLE variable in manifest.json. */
     getMargin: function (tag, position) {
       var val = STYLE.tags[tag];
       return this.tokenizeMargin(val["margin-" + position] || "0px");
     },
 
+    /* this gets the height of text from the font-size in px. */
     getHeight: function (tag) {
       var val = STYLE.tags[tag]["font-size"];
       return this.tokenizeMargin(val);
     },
 
+    getAttr: function (tag, attr, def_val) {
+      return STYLE.tags[tag][attr] || def_val;
+    },
+
+    /* recurse through the tree and add a parent and sibling to each node
+       to make it easy to traverse though once constructing and rendering the HTML. */
     addParents: function (tree, parent, recursion) {
       tree.forEach((function (o, i) {
         o.parent = parent || null;
@@ -38,7 +48,8 @@ var Parser = function () {
       recursion.finish();
     },
 
-    // pure brilliance
+    /* start with a call stack of zero, for each new function increase the counter.
+       if a function ends, decrease the counter. Once it hits -1 all are done. */
     RecursionCounter: function (callback) {
       var counter = 0;
 
@@ -56,13 +67,13 @@ var Parser = function () {
       };
     },
 
+    /* This iterates through the tree and provides a callback for drawing. */
     iterate: function (tree, coords, callback) {
       var pointer = tree,
-          counter = 0,
-          last,
           height = 0,
           left = 0,
           $this = this;
+
       var actions = {
         deeperLevel: function (pointer) {
           if (pointer.seen) return false;
@@ -89,17 +100,14 @@ var Parser = function () {
       };
 
       while (pointer) {
-        counter++;
-
-        last = pointer;
-        pointer = actions.deeperLevel(last) || actions.nextSibling(last) || actions.shallowerLevel(last);
+        pointer = actions.deeperLevel(pointer) || actions.nextSibling(pointer) || actions.shallowerLevel(pointer);
 
         if (!pointer.seen && pointer) {
           height += this.getMargin(pointer.type, "top").value;
           if (pointer.text.length > 0) {
-            height += this.getHeight(pointer.type).value;
+            height += this.getHeight(pointer.type).value * this.getAttr(pointer.type, "line-height", 1);
           }
-          height += callback(coords, pointer, height, left, counter) || 0;
+          height += callback(coords, pointer, height, left) || 0;
         }
       }
     },
@@ -153,7 +161,6 @@ var Parser = function () {
         "children": []
       },
           meta = {
-            pointer: DOCUMENT,
             level: -2,
             levels: [DOCUMENT]
           },

@@ -79,7 +79,8 @@ var STYLE = {
       "font-size": "12px",
       "font-weight": "400",
       "margin-top": "2px",
-      "max-width": "500px"
+      "max-width": "500px",
+      "line-height": 1.5
     },
     "span": {
       "font-family": "Roboto",
