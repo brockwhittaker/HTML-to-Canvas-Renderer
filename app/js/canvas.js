@@ -4,8 +4,8 @@ var Sheet = function () {
   this.canvas = document.createElement("canvas");
   this.context = this.canvas.getContext("2d");
 
-  this.canvas.width = 1000;
-  this.canvas.height = 1000;
+  this.canvas.width = 1700;
+  this.canvas.height = 2200;
 
   document.body.appendChild(this.canvas);
 
@@ -15,7 +15,7 @@ var Sheet = function () {
     },
 
     getHeight: function (settings) {
-      return parseFloat(settings["font-size"]) * (settings["line-height"] || 1);
+      return settings["font-size"] * STYLE.meta.scale * (settings["line-height"] || 1);
     },
 
     findWrapPoints: function (text, width, max_width) {
@@ -78,10 +78,10 @@ Sheet.prototype = {
     var $this = this;
 
     this.context.textBaseline = "bottom";
-    this.context.font = style["font-weight"] + " " + style["font-size"] + " " + style["font-family"];
+    this.context.font = style["font-weight"] + " " + style["font-size"] * STYLE.meta.scale + "px " + style["font-family"];
     this.context.fillStyle = style.color || "#000";
 
-    var max_width = parseFloat(style["max-width"]) || this.canvas.width - x;
+    var max_width = style["max-width"] || this.canvas.width - x;
     var line_width = this.context.measureText(text).width;
     var height_offset = 0;
 

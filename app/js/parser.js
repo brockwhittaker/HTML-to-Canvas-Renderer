@@ -2,6 +2,8 @@ var Parser = function () {
   this.utils = {
     /* tokenizeMargin accepts a value like "35px" and returns the parsed float
        value and the units it is in. */
+
+    /*
     tokenizeMargin: function (val) {
       if (/px/.test(val)) {
         return {
@@ -15,21 +17,17 @@ var Parser = function () {
         };
       }
     },
+    */
 
     /* this gets the margin attribute from the STYLE variable in manifest.json. */
     getMargin: function (tag, position) {
-      var val = STYLE.tags[tag];
-      return this.tokenizeMargin(val["margin-" + position] || "0px");
+      return (STYLE.tags[tag]["margin-" + position] || 0) * STYLE.meta.scale;
     },
 
     /* this gets the height of text from the font-size in px. */
-    getHeight: function (tag) {
-      var val = STYLE.tags[tag]["font-size"];
-      return this.tokenizeMargin(val);
-    },
-
-    getAttr: function (tag, attr, def_val) {
-      return STYLE.tags[tag][attr] || def_val;
+    getHeight: function (style) {
+      var val = style["font-size"] * STYLE.meta.scale * (style["line-height"] || 1);
+      return val;
     },
 
     /* recurse through the tree and add a parent and sibling to each node
@@ -67,10 +65,13 @@ var Parser = function () {
       };
     },
 
+    /* get an object of all style attributes for a tag. */
     getTagStyle: function (tag) {
       return STYLE.tags[tag];
     },
 
+    /* get an object of all class attributes for each attribute in a string.
+       the last classes supersede the first classes in a string. */
     getClassStyle: function (classes) {
       var style = {};
 
@@ -131,7 +132,7 @@ var Parser = function () {
           else {
             pointer.seen = true;
             if (pointer.children) {
-              left += $this.getMargin(pointer.type, "left").value;
+              left += $this.getMargin(pointer.type, "left");
               return pointer.children[0];
             } else return false;
           }
@@ -147,8 +148,8 @@ var Parser = function () {
            the tree. */
         shallowerLevel: function (pointer) {
           if (pointer && pointer.parent) {
-            left -= $this.getMargin(pointer.parent.type, "left").value;
-            height += $this.getMargin(pointer.parent.type, "bottom").value;
+            left -= $this.getMargin(pointer.parent.type, "left");
+            height += $this.getMargin(pointer.parent.type, "bottom");
             return pointer.parent;
           } else return false;
         }
@@ -173,15 +174,17 @@ var Parser = function () {
             container_index++;
           }
 
-          height += this.getMargin(pointer.type, "top").value;
+
+          var style = this.inheritStyle(pointer);
+          console.log(style, pointer);
+
+          height += style["margin-top"] * STYLE.meta.scale;
 
           /* only add the height of valid lines. If there's no text, don't add
              any height. */
           if (pointer.text.length > 0) {
-            height += this.getHeight(pointer.type).value * this.getAttr(pointer.type, "line-height", 1);
+            height += this.getHeight(style);
           }
-
-          var style = this.inheritStyle(pointer);
 
           /* provide a callback with all the info needed to draw the line. */
           height += callback(coords, pointer, height, left, style) || 0;

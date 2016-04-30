@@ -1,0 +1,83 @@
+container{50,50}
+  body
+    h1.thick,fs-large~AAPL
+    p.light~Apple Inc.
+
+    br
+
+    p.light~Asset Fundamental and Quantitative Indicators
+
+container{50,430}
+  body
+    p.fs-small,thick~Price
+    p.fs-small,thin~93.72
+
+    br.half-margin
+
+    p.fs-small,thick~Market Cap
+    p.fs-small,thin~519.75B
+
+    br.half-margin
+
+    p.fs-small,thick~Book Value
+    p.fs-small,thin~23.13
+
+container{400,430}
+  body
+    p.fs-small,thick~Change
+    p.fs-small,thin~-1.15%
+
+    br.half-margin
+
+    p.fs-small,thick~EBITDA
+    p.fs-small,thin~82.79B
+
+    br.half-margin
+
+    p.fs-small,thick~Div Yield
+    p.fs-small,thin~2.13
+
+container{750,430}
+  body
+    p.fs-small,thick~Day High
+    p.fs-small,thin~94.72
+
+    br.half-margin
+
+    p.fs-small,thick~EPS
+    p.fs-small,thin~9.40
+
+    br.half-margin
+
+    p.fs-small,thick~Price To Sales
+    p.fs-small,thin~2.24
+
+container{1100,430}
+  body
+    p.fs-small,thick~Day Low
+    p.fs-small,thin~92.51
+
+    br.half-margin
+
+    p.fs-small,thick~PE Ratio
+    p.fs-small,thin~9.98
+
+    br.half-margin
+
+    p.fs-small,thick~Price To Book
+    p.fs-small,thin~4.10
+
+container{1450,430}
+  body
+    p.fs-small,thick~Volume
+    p.fs-small,thin~68,531,478
+
+    br.half-margin
+
+    p.fs-small,thick~PEG Ratio
+    p.fs-small,thin~1.23
+
+    br.half-margin
+
+    p.fs-small,thick~Short Ratio
+    p.fs-small,thin~1.63

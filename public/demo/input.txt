@@ -14,7 +14,7 @@ container{0,0}
 
     p~Meatball cupim drumstick frankfurter cow landjaeger salami sirloin pork loin. Pastrami doner bacon turkey brisket shank, fatback beef ribs swine. Tri-tip prosciutto shank biltong, chuck beef ribs filet mignon shoulder kielbasa ground round spare ribs.
 
-    h3~This is another h3 tag.
+    h3.thin~This is another h3 tag.
     h3~This is another h3 tag right here.
 
 container{500,0}

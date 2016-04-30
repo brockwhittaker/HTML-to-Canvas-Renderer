@@ -60,53 +60,76 @@ This is an example of what the above html turns into in object form.
 */
 var STYLE = {
   "tags": {
-    "document": {},
+    "document": {
+      "color": "#444"
+    },
     "body": {
       "font-family": "Roboto",
-      "font-size": "12px",
-      "font-weight": "300",
-      "margin-top": "0px"
+      "font-size": 12,
+      "font-weight": 300,
+      "margin-top": 0
     },
     "div": {
       "font-family": "Roboto",
-      "font-size": "12px",
-      "font-weight": "300",
-      "margin-top": "20px",
-      "margin-left": "20px",
-      "margin-bottom": "20px",
-      "color": "blue"
+      "font-size": 12,
+      "font-weight": 300,
+      "margin-top": 20,
+      "margin-left": 20,
+      "margin-bottom": 20
     },
     "h1": {
       "font-family": "Roboto",
-      "font-size": "24px",
-      "font-weight": "800",
-      "margin-top": "50px"
+      "font-size": 24,
+      "font-weight": 800,
+      "margin-top": 0
     },
     "h3": {
       "font-family": "Roboto",
-      "font-size": "16px",
-      "font-weight": "800",
-      "margin-top": "20px",
-      "max-width": "500px"
+      "font-size": 16,
+      "font-weight": 800,
+      "margin-top": 20,
     },
     "p": {
       "font-family": "Roboto",
-      "font-size": "12px",
-      "font-weight": "400",
-      "margin-top": "2px",
-      "max-width": "500px",
-      "line-height": 1.5
+      "font-size": 12,
+      "font-weight": 400,
+      "margin-top": 0,
+      "line-height": 1
     },
     "span": {
       "font-family": "Roboto",
-      "font-size": "12px",
-      "font-weight": "400",
-      "margin-top": "0px"
+      "font-size": 12,
+      "font-weight": 400,
+      "margin-top": 0
+    },
+    "br": {
+      "margin-top": 12
     }
   },
   "class": {
     "red": {
       "color": "red"
+    },
+    "thin": {
+      "font-weight": 200
+    },
+    "light": {
+      "font-weight": 300
+    },
+    "thick": {
+      "font-weight": 600
+    },
+    "fs-large": {
+      "font-size": 48
+    },
+    "fs-small": {
+      "font-size": 9
+    },
+    "half-margin": {
+      "margin-top": 6
     }
+  },
+  "meta": {
+    "scale": 4
   }
 };

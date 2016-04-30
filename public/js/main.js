@@ -1,6 +1,6 @@
 var parser = new Parser();
 var $ = _;
-$.get("public/demo/input.txt", function (response) {
+$.get("public/demo/stocks.txt", function (response) {
   response = parser.parse(response);
   var body = response;
 
