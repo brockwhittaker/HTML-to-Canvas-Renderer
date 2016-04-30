@@ -1,0 +1,14 @@
+body
+  div.red
+    h1~The Black Scholes Model
+    
+    h3~A study into the complexities of the Black-Scholes model for pricing derivatives.
+
+    p~Bacon ipsum dolor amet spare ribs doner prosciutto, turducken venison corned beef t-bone kevin landjaeger tongue meatloaf. Sausage fatback ham, jowl ham hock pork bellyy tail beef ribs leberkas tenderloin pig. Meatball cupim drumstick frankfurter cow landjaeger salami sirloin pork loin. Pastrami doner bacon turkey brisket shank, fatback beef ribs swine. Tri-tip prosciutto shank biltong, chuck beef ribs filet mignon shoulder kielbasa ground round spare ribs.
+    h3~This is another h3 tag for a subheader.
+
+    p~Bacon ipsum dolor amet spare ribs doner prosciutto, turducken venison corned beef t-bone kevin landjaeger tongue meatloaf.
+
+    p~Bacon ipsum dolor amet spare ribs doner prosciutto, turducken venison corned beef t-bone kevin landjaeger tongue meatloaf. Sausage fatback ham, jowl ham hock pork bellyy tail beef ribs leberkas tenderloin pig. Meatball cupim drumstick frankfurter cow landjaeger salami sirloin pork loin. Pastrami doner bacon turkey brisket shank, fatback beef ribs swine. Tri-tip prosciutto shank biltong, chuck beef ribs filet mignon shoulder kielbasa ground round spare ribs. Meatball cupim drumstick frankfurter cow landjaeger salami sirloin pork loin. Pastrami doner bacon turkey brisket shank, fatback beef ribs swine. Tri-tip prosciutto shank biltong, chuck beef ribs filet mignon shoulder kielbasa ground round spare ribs.
+
+    p~Meatball cupim drumstick frankfurter cow landjaeger salami sirloin pork loin. Pastrami doner bacon turkey brisket shank, fatback beef ribs swine. Tri-tip prosciutto shank biltong, chuck beef ribs filet mignon shoulder kielbasa ground round spare ribs.
