@@ -1,4 +1,17 @@
-var MANIFEST = {
+/*
+
+body
+  div
+    h1~Some title text.
+    h3~This is a subtitle.
+  div
+    p~The quick brown fox jumped over the lazy dog.
+    p~Here's a second paragraph, that should have no real margin.
+    h1~Whereas this one has margin.
+
+This is an example of what the above html turns into in object form.
+
+{
   "type": "body",
   "class": "",
   "text": "",
@@ -38,13 +51,13 @@ var MANIFEST = {
         {
           "type": "h1",
           "class": "",
-          "text": "Whereas this sexy h1 tag has some margin."
+          "text": "Whereas this one has margin."
         }
       ]
     }
   ]
-};
-
+}
+*/
 var STYLE = {
   "tags": {
     "document": {},
