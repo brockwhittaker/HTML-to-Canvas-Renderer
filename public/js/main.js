@@ -6,13 +6,7 @@ $.get("public/demo/input.txt", function (response) {
 
   console.log(response);
 
-  parser.render(body, {x: 0, y: 0}, function (coords, o, h, l) {
-    var sources = [STYLE.tags[o.type]];
-    o.class.split(/,/g).forEach(function (className) {
-      sources.push(STYLE.class[className]);
-    });
-    var style = $.assign.apply(null, sources);
-
+  parser.render(body, {x: 0, y: 0}, function (coords, o, h, l, style) {
     var x = l + (coords.x || 0);
     var y = h + (coords.y || 0);
 

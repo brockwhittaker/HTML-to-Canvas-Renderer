@@ -67,6 +67,49 @@ var Parser = function () {
       };
     },
 
+    getTagStyle: function (tag) {
+      return STYLE.tags[tag];
+    },
+
+    getClassStyle: function (classes) {
+      var style = {};
+
+      classes.split(/,/).forEach(function (o) {
+        style = $.assign(style, STYLE.class[o]);
+      });
+
+      return style;
+    },
+
+    /* get all parents to inherit style from. */
+    inheritStyle: function (pointer) {
+      var nodes = [pointer],
+          style = [],
+          $this = this;
+
+      while (pointer.parent) {
+        nodes.push(pointer.parent);
+        pointer = pointer.parent;
+      }
+
+      /* put the closest nodes at the end so they inherit last and take
+         prominence. */
+      nodes.reverse();
+
+      /* do all tag styles first. */
+      nodes.forEach(function (o) {
+        style = $.assign(style, $this.getTagStyle(o.type));
+      });
+
+      /* do all class styles last. */
+      nodes.forEach(function (o) {
+        if (o.class)
+          style = $.assign(style, $this.getClassStyle(o.class));
+      });
+
+      return style;
+    },
+
     /* This iterates through the tree and provides a callback for drawing. */
     iterate: function (tree, coords, callback) {
       var pointer = tree,
@@ -138,8 +181,10 @@ var Parser = function () {
             height += this.getHeight(pointer.type).value * this.getAttr(pointer.type, "line-height", 1);
           }
 
+          var style = this.inheritStyle(pointer);
+
           /* provide a callback with all the info needed to draw the line. */
-          height += callback(coords, pointer, height, left) || 0;
+          height += callback(coords, pointer, height, left, style) || 0;
         }
       }
     },

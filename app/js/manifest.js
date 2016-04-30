@@ -74,6 +74,7 @@ var STYLE = {
       "margin-top": "20px",
       "margin-left": "20px",
       "margin-bottom": "20px",
+      "color": "blue"
     },
     "h1": {
       "font-family": "Roboto",
